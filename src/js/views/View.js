@@ -4,14 +4,15 @@ export default class View {
   _data;
 
   /**
-   * Render the received object to the DOM
-   * @param {Object | Object[]} data The data to be rendered (e.g. recipe)
-   * @param {boolean} [render=true] If false, create markup string instead of rendering to the DOM
-   * @returns {undefined | string} A markup string is returned if render=false
+   *Render the received object to DOM
+   * @param {Object | Object[]} data The data to be rendered(e.g. recipe)
+   * @param {boolean} [render=true] if false create markup string instead of rendering to DOM
+   * @returns {undefined | string} A markup is returned if rendered=false
    * @this {Object} View instance
-   * @author Jonas Schmedtmann
-   * @todo Finish implementation
+   * @author Elshad Rzayev
+   * @todo Finish Implementation
    */
+
   render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();

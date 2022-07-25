@@ -5,7 +5,7 @@ import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import bookmarksView from './views/bookmarksView.js';
-// import addRecipeView from './views/addRecipeView.js';
+import addRecipeView from './views/addRecipeView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -31,7 +31,6 @@ const controlRecipes = async function () {
     recipeView.render(model.state.recipe);
   } catch (err) {
     recipeView.renderError();
-    console.error(err);
   }
 };
 
@@ -88,6 +87,41 @@ const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
+const controlAddRecipe = async function (newRecipe) {
+  // console.log(Object.entries(newRecipe));
+  try {
+    // Render Spinner
+
+    addRecipeView.renderSpinner();
+
+    await model.uploadRecipe(newRecipe);
+
+    // render recipe
+    recipeView.render(model.state.recipe);
+
+    // Success Message
+    addRecipeView.renderMessage();
+
+    // Render Bookmarkview
+    bookmarksView.render(model.state.bookmarks);
+
+    // Change ID in the URL
+
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
+
+    // Close the form
+    setTimeout(function () {
+      addRecipeView.toggleWindow();
+      // location.reload();
+      document.location.reload();
+      // window.history.replaceState(null, '', `#${model.state.recipe.id}`);
+    }, MODAL_CLOSE_SEC * 1000);
+  } catch (err) {
+    console.error(err);
+    addRecipeView.renderError(err);
+  }
+};
+
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
@@ -95,6 +129,6 @@ const init = function () {
   recipeView.addHandlerAddBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
-  // addRecipeView.addHandlerUpload(controlAddRecipe);
+  addRecipeView.addHandlerUpload(controlAddRecipe);
 };
 init();
